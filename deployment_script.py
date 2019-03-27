@@ -2,9 +2,8 @@ import requests
 from subprocess import Popen
 
 
-def get_panda_pics():
+def get_panda_pics(panda_pics_url):
     try:
-        panda_pics_url = 'https://s3.eu-central-1.amazonaws.com/devops-exercise/pandapics.tar.gz'
         Popen("wget %s" % panda_pics_url, shell=True)
         imgs_dir_name = 'images' # define name of the panda pics directory
         Popen("mkdir %s" % imgs_dir_name, shell=True)  # create a directory for panda pics (if needed)
@@ -13,23 +12,21 @@ def get_panda_pics():
         print 'failed to get panda pics with the following error: - %s' % e
 
 
-def get_git_repo():
+def get_git_repo(git_url):
     try:
-        git_url = 'https://github.com/bigpandaio/ops-exercise.git'
         Popen("git clone %s" % git_url, shell=True)  # cloning the panda_app repository
     except Exception as e:
-        print 'failed to get panda pics with the following error: - %s' % e
+        print 'failed to clone repository with the following error: - %s' % e
 
 
 def build_docker_compose():
     try:
         Popen('docker-compose up -d', shell=True) # start the docker-compose process
     except Exception as e:
-        print 'failed to get panda pics with the following error: - %s' % e
+        print 'failed to start the docker-compose with the following error: - %s' % e
 
 
-def test_app_health():
-    test_url='http://localhost:3000/health'
+def test_app_health(test_url):
     r = requests.get(test_url)
     if r.status_code is not 200:
         return False
@@ -37,6 +34,9 @@ def test_app_health():
 
 
 if __name__ == "__main__":
-    get_panda_pics()
-    get_git_repo()
+    panda_pics_url = 'https://s3.eu-central-1.amazonaws.com/devops-exercise/pandapics.tar.gz'
+    git_url = 'https://github.com/bigpandaio/ops-exercise.git'
+    test_url = 'http://localhost:3000/health'
+    get_panda_pics(panda_pics_url)
+    get_git_repo(git_url)
     build_docker_compose()
