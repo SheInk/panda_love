@@ -1,0 +1,13 @@
+version: "3"
+services:
+  db:
+    build: "./ops-exercise/db"
+    ports:
+      - "27017:27017"
+  web:
+    build: './ops-exercise'
+    ports:
+      - "3000:3000"
+    command: /bin/sh -c "npm install && npm start"
+    volumes:
+      - ./images:/opt/app/public/images
